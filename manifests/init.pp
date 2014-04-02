@@ -141,6 +141,15 @@ class apache (
     require => Package['httpd'],
   }
 
+  if $osfamily == "RedHat" {
+    # Set correct ownership for default WSGI socket location 
+    file { '/var/log/httpd':
+      ensure  => directory,
+      owner   => $user,
+      require => Package['httpd'],
+    }
+  }
+
   if ! defined(File[$mod_dir]) {
     exec { "mkdir ${mod_dir}":
       creates => $mod_dir,
